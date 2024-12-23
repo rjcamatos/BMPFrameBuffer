@@ -199,6 +199,11 @@ class BMPFrameBuffer:
         for nByte in range(self._window._bytes):
             self._window._windowBuffer[int(self._flipH*(xPos))+int(self._flipV*(yPos))+nByte] = self._color[nByte]
 
+        
+        tmpThikness = self._thikness
+        if self._rotation > 0 and self._thikness == 0:
+            self._thikness = 2 #FAST WORK AROUND FOR PIXELATED ROTATION
+
         tR = 0
         while tR < self._thikness:
             tC = 0
@@ -207,7 +212,8 @@ class BMPFrameBuffer:
                     self._window._windowBuffer[int(self._flipV*(yPos-(tR*self._window._windowRowSize)))+int(self._flipH*(xPos-(tC*self._window._windowColumnSize)))+nByte] = self._color[nByte]
                 tC += 1
             tR += 1
-        return
+
+        self._thikness = tmpThikness
 
     def drawLine(self,startX,endX,startY,endY):
         width = (endX-startX)
@@ -243,15 +249,16 @@ class BMPFrameBuffer:
 
     def drawRectangle(self,xPos,yPos,width,height,fill=False):
         if fill == True:
+            self.setThikness(0)
             tmpColor = self._color
             self._color = self._fillColor
             rangeStep = self._thikness
             if self._thikness == 0: rangeStep = 1
             if height < 0: rangeStep *= -1            
-
             for step in range(0,height,rangeStep):
                 self.drawLineH(xPos,yPos+step,width)
             self._color = tmpColor
+            self.restoreThikness()
 
         incW = 1
         incH = 1

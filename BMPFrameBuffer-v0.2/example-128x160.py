@@ -33,7 +33,6 @@ def img128x160():
     data.setColor(255,255,0)
     data.drawSquare(60,50,-40,True)
 
-
     data.setColor(255,0,255,True)
     data.setColor(200,255,255)
     data.setRotation(45,64,80)
