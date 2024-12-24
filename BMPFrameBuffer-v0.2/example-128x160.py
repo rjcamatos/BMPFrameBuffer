@@ -10,7 +10,7 @@ def img128x160():
 
     data = BMPFrameBuffer(128,160,16)
 
-    data.setThikness(2)
+    data.setThikness(1)
     data.setColor(0,0,0,True)
     
     data.setWindow(0,128,0,160,False)
@@ -27,12 +27,12 @@ def img128x160():
     data.setThikness(0)
     data.setColor(255,0,255,True)
     data.setColor(200,255,255)
-    data.setRotation(45,64,80)
+    data.setRotation(30,64,80)
     data.drawRectangle(64-20,80-25,40,50,True)
     data.setRotation()
     data.restoreColor(True)
 
-    data.setThikness(3)
+    data.setThikness(2)
     
     data.setColor(127,127,127)
     data.drawLine(10,90,10,80)
@@ -46,9 +46,8 @@ def img128x160():
     data.flush()
 
     data.loadFont('font16bits-20X5.bmp')
-    data.setColor(0,0,255,True) 
-    data.setColor(255,0,0)
-    data.setWindow(1,300,1,16,False)
+    data.setColor(255,255,0)
+    data.setWindow(1,300,1,16)
     data.printChars(1,1,b'HEllo World!')
     
 
