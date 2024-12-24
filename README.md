@@ -1,3 +1,3 @@
-# Python BMPFrameBuffer
+# Python Virtual Frame Buffer
 
-A Python Frame Buffer With ability to save as Bitmap Image
+A Virtual Frame Buffer writen in python With ability to save as Bitmap Image
