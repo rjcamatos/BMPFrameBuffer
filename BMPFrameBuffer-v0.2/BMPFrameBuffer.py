@@ -162,7 +162,6 @@ class BMPFrameBuffer:
 
     def setThikness(self,thikness):
         self._tmpThikness = self._thikness
-        if thikness == 1: thikness=2
         self._thikness = thikness
 
     def restoreThikness(self):
@@ -172,6 +171,9 @@ class BMPFrameBuffer:
             self._rotation = degress
             self._xOrigin = xOrigin
             self._yOrigin = yOrigin
+
+    def _getOffset(self,xPos,yPos):
+        return [xPos*self._window._windowColumnSize,yPos*self._window._windowRowSize]
 
     def setPixel(self,xPos,yPos):
         if self._color == None: return
@@ -192,26 +194,21 @@ class BMPFrameBuffer:
         if xPos < 0 or xPos > self._window._windowColumns-1 - self._thikness: return
         if yPos < 0 or yPos > self._window._windowRows-1 - self._thikness: return
 
-        
-        xPos *= self._window._windowColumnSize
-        yPos *= self._window._windowRowSize
+        startOffset = self._getOffset(xPos,yPos)
+        startOffset = int(self._flipH*(startOffset[0]))+int(self._flipV*(startOffset[1]))
+        self._window._windowBuffer[startOffset:startOffset+self._window._bytes] = self._color
 
-        for nByte in range(self._window._bytes):
-            self._window._windowBuffer[int(self._flipH*(xPos))+int(self._flipV*(yPos))+nByte] = self._color[nByte]
+        if self._rotation == 0 and self._thikness == 0: return
 
-        
-        tmpThikness = self._thikness
-        if self._rotation > 0 and self._thikness == 0:
-            self._thikness = 2 #FAST WORK AROUND FOR PIXELATED ROTATION
+        tmpThikness = self._thikness #FAST RECOVER PIXELATED ROTATION, NEED IMPROVEMENT TO ALLOW THINER LINES, IMPLEMENT NEAR NEIGHBOR
+        if self._rotation > 0 and self._thikness == 0: self._thikness = 1
 
-        tR = 0
-        while tR < self._thikness:
-            tC = 0
-            while tC < self._thikness:
-                for nByte in range(self._window._bytes):
-                    self._window._windowBuffer[int(self._flipV*(yPos-(tR*self._window._windowRowSize)))+int(self._flipH*(xPos-(tC*self._window._windowColumnSize)))+nByte] = self._color[nByte]
-                tC += 1
-            tR += 1
+        for r in range(self._thikness,-self._thikness,-1):
+            for c in range(self._thikness,-self._thikness,-1):
+                if r == 0 and c==0: continue
+                startOffset = self._getOffset(xPos+c,yPos+r)
+                startOffset = int(self._flipH*(startOffset[0]))+int(self._flipV*(startOffset[1]))
+                self._window._windowBuffer[startOffset:startOffset+self._window._bytes] = self._color
 
         self._thikness = tmpThikness
 
@@ -232,16 +229,14 @@ class BMPFrameBuffer:
 
 
     def drawLineH(self,xPos,yPos,size):
-        rangeStep = int(self._thikness/2)
-        if self._thikness == 0: rangeStep = 1
+        rangeStep = int(self._thikness/2) + 1
         if size < 0: rangeStep *= -1
 
         for step in range(0,size,rangeStep):
             self.setPixel(xPos+step,yPos)
     
     def drawLineV(self,xPos,yPos,size):
-        rangeStep = int(self._thikness/2)
-        if self._thikness == 0: rangeStep = 1
+        rangeStep = int(self._thikness/2) + 1
         if size < 0: rangeStep *= -1
 
         for step in range(0,size,rangeStep):

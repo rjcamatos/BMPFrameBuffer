@@ -12,7 +12,6 @@ def img800x600():
 
     data.setThikness(3)
 
-
     data.setColor(0,255,0,False)
     data.setWindow(0,800,0,600,False)
 
