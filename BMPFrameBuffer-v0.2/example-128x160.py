@@ -10,7 +10,7 @@ def img128x160():
 
     data = BMPFrameBuffer(128,160,16)
 
-    data.setThikness(0)
+    data.setThikness(2)
     data.setColor(0,0,0,True)
     
     data.setWindow(0,128,0,160,False)
@@ -24,6 +24,7 @@ def img128x160():
     data.setColor(255,255,0)
     data.drawSquare(60,50,-40,True)
 
+    data.setThikness(0)
     data.setColor(255,0,255,True)
     data.setColor(200,255,255)
     data.setRotation(45,64,80)
@@ -31,6 +32,8 @@ def img128x160():
     data.setRotation()
     data.restoreColor(True)
 
+    data.setThikness(3)
+    
     data.setColor(127,127,127)
     data.drawLine(10,90,10,80)
 
