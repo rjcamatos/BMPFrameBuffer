@@ -196,6 +196,7 @@ class BMPFrameBuffer:
         if yPos < 0 or yPos > self._window._windowRows-1 - self._thikness: return
 
          #IMPLEMENTATION OF NEAR NEIGHBOR (FOR ROTATION PIXELATED CORRENTION)
+         #THIS WORKS VERY BAD WTIH CHARECTERS, MAYBE NEED SPEE IMPLEMENTATION
         if self._rotation > 0 and self._thikness == 0:
 
             neighborCount = 0
@@ -278,7 +279,7 @@ class BMPFrameBuffer:
             if self._thikness == 0: rangeStep = 1
             if height < 0: rangeStep *= -1
             for step in range(0,height-rangeStep,rangeStep):
-                self.drawLineH(xPos+rangeStep,yPos+step+rangeStep,width-rangeStep)
+                self.drawLineH(xPos+rangeStep*2,yPos+step+rangeStep,width-rangeStep*2)
             self._color = tmpColor
             self.restoreThikness()
 
@@ -356,7 +357,6 @@ class BMPFrameBuffer:
         atRow =  math.floor(charIndex/self._charTableMatrix[0])
         atCol = charIndex - self._charTableMatrix[0]*atRow
 
-        tmpColor = self._color
         self.setThikness(0)
         sRow = atRow * self._charTableCharWidth * self._charTableWidth * self._window._bytes        
         for r in range(self._charTableCharHeight):
@@ -367,7 +367,6 @@ class BMPFrameBuffer:
                     self.setPixel(xPos+c-1,yPos+r)
                 sCol += self._window._bytes
         self.restoreThikness()
-        self._color = tmpColor
 
 
     def printChars(self,xPos,yPos,chars):
